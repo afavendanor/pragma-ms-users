@@ -1,5 +1,6 @@
 package co.com.pragma.config;
 
+import gateways.UserGateway;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.Import;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UseCasesConfigTest {
+class UseCasesConfigTest {
 
     @Test
     void testUseCaseBeansExist() {
@@ -38,8 +39,8 @@ public class UseCasesConfigTest {
         }
 
         @Bean
-        public TaskRepository taskRepository() {
-            return Mockito.mock(TaskRepository.class);
+        public UserGateway userGateway() {
+            return Mockito.mock(UserGateway.class);
         }
     }
 

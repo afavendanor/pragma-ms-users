@@ -1,7 +1,8 @@
 buildscript {
 	ext {
 		cleanArchitectureVersion = '3.25.0'
-		springBootVersion = '3.5.4'
+        springBootVersion = '3.2.4'
+        springFrameWorkVersion='6.1.4'
 		sonarVersion = '6.2.0.5505'
 		jacocoVersion = '0.8.13'
 		pitestVersion = '1.19.0-rc.1'
@@ -15,6 +16,24 @@ plugins {
 	id 'info.solidsoft.pitest' version "${pitestVersion}" apply false
 	id 'org.sonarqube' version "${sonarVersion}"
 	id 'jacoco'
+}
+
+apply from: './main.gradle'
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    finalizedBy jacocoMergedReport
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+        html.destination file("${buildDir}/jacocoHtml")
+    }
 }
 
 sonar {
@@ -33,5 +52,3 @@ sonar {
         property "sonar.externalIssuesReportPaths", "build/issues.json"
     }
 }
-
-apply from: './main.gradle'

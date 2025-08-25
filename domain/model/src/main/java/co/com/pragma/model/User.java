@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Setter
 @RequiredArgsConstructor
 public class User {
-    private String id;
+    private String identification;
     private String name;
     private String lastName;
     private LocalDate birthDay;

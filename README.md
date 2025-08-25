@@ -86,7 +86,6 @@ Este directorio contiene las herramientas y configuraciones necesarias para prue
 ├── local_enviroment/
 │   ├── docker-compose.yml
 │   ├── script_create_table.sql
-│   ├── java_reactivo.postman_collection.json
 │   └── java_reactivo_test_plan.jmx
 ```
 

@@ -1,6 +1,6 @@
 package co.com.pragma.config;
 
-import gateways.UserGateway;
+import co.com.pragma.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -39,8 +39,8 @@ class UseCasesConfigTest {
         }
 
         @Bean
-        public UserGateway userGateway() {
-            return Mockito.mock(UserGateway.class);
+        public UserRepository userGateway() {
+            return Mockito.mock(UserRepository.class);
         }
     }
 

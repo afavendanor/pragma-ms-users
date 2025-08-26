@@ -1,7 +1,7 @@
 package co.com.pragma.api;
 
 import co.com.pragma.api.dto.GenericResponseDTO;
-import co.com.pragma.model.util.ResponseCode;
+import co.com.pragma.model.error.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

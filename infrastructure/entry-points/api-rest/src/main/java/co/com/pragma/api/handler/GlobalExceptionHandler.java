@@ -2,7 +2,7 @@ package co.com.pragma.api.handler;
 
 import co.com.pragma.api.dto.GenericResponseDTO;
 import co.com.pragma.model.error.FieldError;
-import co.com.pragma.model.util.ResponseCode;
+import co.com.pragma.model.error.ResponseCode;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;

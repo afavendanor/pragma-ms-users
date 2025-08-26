@@ -1,8 +1,6 @@
 package co.com.pragma.model.error;
 
 
-import co.com.pragma.model.util.ResponseCode;
-
 import java.io.Serial;
 import java.text.MessageFormat;
 import java.util.ArrayList;

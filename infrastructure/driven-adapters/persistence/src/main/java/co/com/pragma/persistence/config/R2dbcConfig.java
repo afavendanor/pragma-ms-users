@@ -1,9 +1,0 @@
-package co.com.pragma.persistence.config;
-
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
-
-@Configuration
-@EnableR2dbcRepositories(basePackages = "co.com.pragma.persistence")
-public class R2dbcConfig {
-}

@@ -1,7 +1,7 @@
 package co.com.pragma.api.dto;
 
 import co.com.pragma.model.error.FieldError;
-import co.com.pragma.model.util.ResponseCode;
+import co.com.pragma.model.error.ResponseCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

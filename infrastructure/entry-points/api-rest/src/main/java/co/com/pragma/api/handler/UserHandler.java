@@ -3,8 +3,8 @@ package co.com.pragma.api.handler;
 import co.com.pragma.api.dto.CreateUserDTO;
 import co.com.pragma.api.dto.GenericResponseDTO;
 import co.com.pragma.api.mapper.UserApiRestMapper;
-import co.com.pragma.model.util.ResponseCode;
-import co.com.pragma.usecase.user.UserUseCase;
+import co.com.pragma.model.error.ResponseCode;
+import co.com.pragma.usecase.user.RegisterUserUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -17,7 +17,7 @@ public class UserHandler {
 
     private static final Logger log = Loggers.getLogger(UserHandler.class.getName());
 
-    private final UserUseCase userUseCase;
+    private final RegisterUserUseCase registerUserUseCase;
     private final UserApiRestMapper userApiRestMapper;
 
     public Mono<GenericResponseDTO<Object>> createUser(CreateUserDTO createUserDTO) {
@@ -26,7 +26,7 @@ public class UserHandler {
         return errorHandler.addErrors(
                 Mono.defer(() -> {
                     log.debug("Inicializar guardar usuario {}", createUserDTO.getAddress());
-                    return userUseCase.saveUser(
+                    return registerUserUseCase.saveUser(
                                     userApiRestMapper.createUserDTOToUser(createUserDTO)
                             )
                             .thenReturn(new GenericResponseDTO<>(ResponseCode.MSUS001, null))

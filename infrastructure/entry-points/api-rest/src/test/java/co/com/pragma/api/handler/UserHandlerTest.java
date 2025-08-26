@@ -2,10 +2,10 @@ package co.com.pragma.api.handler;
 
 import co.com.pragma.api.dto.CreateUserDTO;
 import co.com.pragma.api.mapper.UserApiRestMapper;
-import co.com.pragma.model.User;
+import co.com.pragma.model.user.User;
 import co.com.pragma.model.error.CustomException;
-import co.com.pragma.model.util.ResponseCode;
-import co.com.pragma.usecase.user.UserUseCase;
+import co.com.pragma.model.error.ResponseCode;
+import co.com.pragma.usecase.user.RegisterUserUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 class UserHandlerTest {
 
     @Mock
-    private UserUseCase userUseCase;
+    private RegisterUserUseCase registerUserUseCase;
 
     @Mock
     private UserApiRestMapper userApiRestMapper;
@@ -43,8 +43,8 @@ class UserHandlerTest {
 
         when(userApiRestMapper.createUserDTOToUser(any(CreateUserDTO.class)))
                 .thenReturn(user);
-        when(userUseCase.saveUser(any(User.class)))
-                .thenReturn(Mono.just(user));
+        when(registerUserUseCase.saveUser(any(User.class)))
+                .thenReturn(Mono.empty());
 
         // Act & Assert
         StepVerifier.create(userHandler.createUser(createUserDTO))
@@ -56,7 +56,7 @@ class UserHandlerTest {
                 .verifyComplete();
 
         verify(userApiRestMapper, times(1)).createUserDTOToUser(any(CreateUserDTO.class));
-        verify(userUseCase, times(1)).saveUser(any(User.class));
+        verify(registerUserUseCase, times(1)).saveUser(any(User.class));
     }
 
     @Test
@@ -71,7 +71,7 @@ class UserHandlerTest {
 
         when(userApiRestMapper.createUserDTOToUser(any(CreateUserDTO.class)))
                 .thenReturn(user);
-        when(userUseCase.saveUser(any(User.class)))
+        when(registerUserUseCase.saveUser(any(User.class)))
                 .thenReturn(Mono.error(new CustomException(ResponseCode.MSUS000, "Fallo de prueba")));
 
         // Act & Assert
@@ -84,7 +84,7 @@ class UserHandlerTest {
                 .verifyComplete();
 
         verify(userApiRestMapper, times(1)).createUserDTOToUser(any(CreateUserDTO.class));
-        verify(userUseCase, times(1)).saveUser(any(User.class));
+        verify(registerUserUseCase, times(1)).saveUser(any(User.class));
     }
 
     @Test
@@ -110,6 +110,6 @@ class UserHandlerTest {
                 .verifyComplete();
 
         verify(userApiRestMapper, times(1)).createUserDTOToUser(any(CreateUserDTO.class));
-        verify(userUseCase, never()).saveUser(any(User.class));
+        verify(registerUserUseCase, never()).saveUser(any(User.class));
     }
 }

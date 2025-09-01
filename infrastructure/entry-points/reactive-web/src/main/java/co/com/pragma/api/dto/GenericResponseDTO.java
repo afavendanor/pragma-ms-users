@@ -7,10 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @ToString
@@ -20,10 +20,7 @@ import java.util.Objects;
 public class GenericResponseDTO<T> {
 
     @Schema(description = "Código interno de la respuesta")
-    private final String responseCode;
-
-    @Schema(description = "Código http de la respuesta")
-    private final int status;
+    private final Integer responseCode;
 
     @Schema(description = "Mensaje adicional de la respuesta")
     private final String responseMessage;
@@ -33,20 +30,11 @@ public class GenericResponseDTO<T> {
     @Schema(description = "Listado de errores de validación de campos")
     private final List<FieldError> fieldErrors;
 
-    public GenericResponseDTO(ResponseCode responseCode, T data) {
-        this.responseCode = responseCode.toString();
-        this.status = responseCode.getStatus();
-        this.responseMessage = responseCode.getHtmlMessage();
+    public GenericResponseDTO(HttpStatus status, ResponseCode responseCode, T data) {
+        this.responseCode = status.value();
+        this.responseMessage = responseCode.getMessage();
         this.data = data;
         this.fieldErrors = new ArrayList<>();
-    }
-
-    public GenericResponseDTO(ResponseCode responseCode, String responseMessage, T data, List<FieldError> fieldErrors) {
-        this.responseCode = responseCode.toString();
-        this.status = responseCode.getStatus();
-        this.responseMessage = responseMessage;
-        this.data = data;
-        this.fieldErrors = Objects.requireNonNullElseGet(fieldErrors, ArrayList::new);
     }
 
 }

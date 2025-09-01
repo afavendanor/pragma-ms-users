@@ -1,7 +1,8 @@
 package co.com.pragma.usecase.user;
 
+import co.com.pragma.model.error.DuplicateEntryException;
+import co.com.pragma.model.error.InternalErrorException;
 import co.com.pragma.model.user.User;
-import co.com.pragma.model.error.CustomException;
 import co.com.pragma.model.error.ResponseCode;
 import co.com.pragma.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -58,8 +59,8 @@ class RegisterUserUseCaseTest {
         // Act & Assert
         StepVerifier.create(registerUserUseCase.saveUser(user))
                 .expectErrorSatisfies(error -> {
-                    assertInstanceOf(CustomException.class, error);
-                    assertEquals(ResponseCode.MSUS003, ((CustomException) error).getResponseCode());
+                    assertInstanceOf(DuplicateEntryException.class, error);
+                    assertEquals(ResponseCode.MSUS003.getMessage(), error.getMessage());
                 })
                 .verify();
 
@@ -76,13 +77,13 @@ class RegisterUserUseCaseTest {
         when(userRepository.findByEmail(anyString()))
                 .thenReturn(Mono.empty());
         when(userRepository.save(any(User.class)))
-                .thenReturn(Mono.error(new CustomException(ResponseCode.MSUS000, "Error guardando usuario")));
+                .thenReturn(Mono.error(new InternalErrorException(ResponseCode.MSUS000, "Error guardando usuario")));
 
         // Act & Assert
         StepVerifier.create(registerUserUseCase.saveUser(user))
                 .expectErrorSatisfies(error -> {
-                    assertInstanceOf(CustomException.class, error);
-                    assertEquals(ResponseCode.MSUS000, ((CustomException) error).getResponseCode());
+                    assertInstanceOf(InternalErrorException.class, error);
+                    assertEquals(ResponseCode.MSUS000.getMessage(), error.getMessage());
                 })
                 .verify();
 

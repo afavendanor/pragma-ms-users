@@ -2,8 +2,8 @@ package co.com.pragma.api.handler;
 
 import co.com.pragma.api.dto.CreateUserDTO;
 import co.com.pragma.api.mapper.UserApiRestMapper;
+import co.com.pragma.model.error.InternalErrorException;
 import co.com.pragma.model.user.User;
-import co.com.pragma.model.error.CustomException;
 import co.com.pragma.model.error.ResponseCode;
 import co.com.pragma.usecase.user.RegisterUserUseCase;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ class UserHandlerTest {
         StepVerifier.create(userHandler.createUser(createUserDTO))
                 .assertNext(respuesta -> {
                     assertNotNull(respuesta);
-                    assertEquals(ResponseCode.MSUS001, ResponseCode.valueOf(respuesta.getResponseCode()));
+                    assertEquals(ResponseCode.MSUS001.getMessage(), respuesta.getResponseMessage());
                     assertNull(respuesta.getData());
                 })
                 .verifyComplete();
@@ -72,13 +72,13 @@ class UserHandlerTest {
         when(userApiRestMapper.createUserDTOToUser(any(CreateUserDTO.class)))
                 .thenReturn(user);
         when(registerUserUseCase.saveUser(any(User.class)))
-                .thenReturn(Mono.error(new CustomException(ResponseCode.MSUS000, "Fallo de prueba")));
+                .thenReturn(Mono.error(new InternalErrorException(ResponseCode.MSUS000, "Fallo de prueba")));
 
         // Act & Assert
         StepVerifier.create(userHandler.createUser(createUserDTO))
                 .assertNext(respuesta -> {
                     assertNotNull(respuesta);
-                    assertEquals(ResponseCode.MSUS000, ResponseCode.valueOf(respuesta.getResponseCode()));
+                    assertEquals(ResponseCode.MSUS000.getMessage(), respuesta.getResponseMessage());
                     assertNull(respuesta.getData());
                 })
                 .verifyComplete();
@@ -98,13 +98,13 @@ class UserHandlerTest {
         user.setEmail("mail@mail.com");
 
         when(userApiRestMapper.createUserDTOToUser(any(CreateUserDTO.class)))
-                .thenThrow(new CustomException(ResponseCode.MSUS000, "Fallo de prueba"));
+                .thenThrow(new InternalErrorException(ResponseCode.MSUS000, "Fallo de prueba"));
 
         // Act & Assert
         StepVerifier.create(userHandler.createUser(createUserDTO))
                 .assertNext(respuesta -> {
                     assertNotNull(respuesta);
-                    assertEquals(ResponseCode.MSUS000, ResponseCode.valueOf(respuesta.getResponseCode()));
+                    assertEquals(ResponseCode.MSUS000.getMessage(), respuesta.getResponseMessage());
                     assertNull(respuesta.getData());
                 })
                 .verifyComplete();

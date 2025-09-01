@@ -1,7 +1,7 @@
 package co.com.pragma.persistence;
 
+import co.com.pragma.model.error.DuplicateEntryException;
 import co.com.pragma.model.user.User;
-import co.com.pragma.model.error.CustomException;
 import co.com.pragma.model.error.ResponseCode;
 import co.com.pragma.r2dbc.UserReactiveRepository;
 import co.com.pragma.r2dbc.UserRepositoryAdapter;
@@ -109,8 +109,8 @@ class UserReactiveRepositoryAdapterTest {
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(error -> {
-                    assertInstanceOf(CustomException.class, error);
-                    assertEquals(ResponseCode.MSUS000, ((CustomException) error).getResponseCode());
+                    assertInstanceOf(DuplicateEntryException.class, error);
+                    assertEquals(ResponseCode.MSUS000.getMessage(), error.getMessage());
                 })
                 .verify();
     }
@@ -125,8 +125,8 @@ class UserReactiveRepositoryAdapterTest {
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(error -> {
-                    assertInstanceOf(CustomException.class, error);
-                    assertEquals(ResponseCode.MSUS004, ((CustomException) error).getResponseCode());
+                    assertInstanceOf(DuplicateEntryException.class, error);
+                    assertEquals(ResponseCode.MSUS004.getMessage(), error.getMessage());
                 })
                 .verify();
     }

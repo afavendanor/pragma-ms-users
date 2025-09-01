@@ -1,7 +1,7 @@
 package co.com.pragma.r2dbc;
 
+import co.com.pragma.model.error.DuplicateEntryException;
 import co.com.pragma.model.user.User;
-import co.com.pragma.model.error.CustomException;
 import co.com.pragma.model.error.ResponseCode;
 import co.com.pragma.r2dbc.entity.UserEntity;
 import co.com.pragma.r2dbc.helper.ReactiveAdapterOperations;
@@ -32,8 +32,8 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
         return super.save(user)
                 .doOnError(e -> log.error("Error guardando usuario: {}", e.getMessage(), e))
                 .onErrorMap(ex -> (ex instanceof DataIntegrityViolationException)
-                        ? new CustomException(ResponseCode.MSUS004)
-                        : new CustomException(ResponseCode.MSUS000));
+                        ? new DuplicateEntryException(ResponseCode.MSUS004)
+                        : new DuplicateEntryException(ResponseCode.MSUS000));
     }
 
     @Override

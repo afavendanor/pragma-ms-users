@@ -2,25 +2,19 @@ package co.com.pragma.model.error;
 
 
 public enum ResponseCode {
-    MSUS000(500, "Ocurrió un error inesperado, por favor intenta mas tarde."),
-    MSUS001(200, "Operación exitosa."),
-    MSUS002(400, "Campos no son validos."),
-    MSUS003(400, "El correo a registrar ya existe en la app."),
-    MSUS004(400, "La entidad a registrar ya existe en la app.");
+    MSUS000("Ocurrió un error inesperado, por favor intenta mas tarde."),
+    MSUS001("Operación exitosa."),
+    MSUS002("Campos no son validos."),
+    MSUS003("El correo a registrar ya existe en la app."),
+    MSUS004("La entidad a registrar ya existe en la app.");
 
-    private final int status;
-    private final String htmlMessage;
+    private final String message;
 
-    ResponseCode(int status, String htmlMessage) {
-        this.status = status;
-        this.htmlMessage = htmlMessage;
+    ResponseCode(String message) {
+        this.message = message;
     }
 
-    public int getStatus() {
-        return this.status;
-    }
-
-    public String getHtmlMessage() {
-        return this.htmlMessage;
+    public String getMessage() {
+        return this.message;
     }
 }

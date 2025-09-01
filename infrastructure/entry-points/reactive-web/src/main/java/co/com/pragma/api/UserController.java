@@ -35,7 +35,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Error inesperado durante el proceso", content = @Content(schema = @Schema(implementation = GenericResponseDTO.class)))})
     public Mono<ResponseEntity<GenericResponseDTO<Object>>> saveUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
         return userHandler.createUser(createUserDTO)
-                .map(genericResponseDto -> ResponseEntity.status(genericResponseDto.getStatus()).body(genericResponseDto));
+                .map(genericResponseDto -> ResponseEntity.status(genericResponseDto.getResponseCode()).body(genericResponseDto));
 
     }
 

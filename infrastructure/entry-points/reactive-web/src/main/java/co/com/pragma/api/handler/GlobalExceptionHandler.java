@@ -5,6 +5,7 @@ import co.com.pragma.model.error.FieldError;
 import co.com.pragma.model.error.ResponseCode;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,8 +35,8 @@ public class GlobalExceptionHandler {
         }
 
         GenericResponseDTO<Map<String, String>> respuesta = new GenericResponseDTO<>(
-                ResponseCode.MSUS002,
-                "Campos no son válidos",
+                HttpStatus.BAD_REQUEST.value(),
+                ResponseCode.MSUS002.getMessage(),
                 null,
                 fieldErrors
         );
@@ -65,8 +66,8 @@ public class GlobalExceptionHandler {
         });
 
         GenericResponseDTO<Map<String, String>> respuesta = new GenericResponseDTO<>(
-                ResponseCode.MSUS002,
-                "Campos no son válidos",
+                HttpStatus.BAD_REQUEST.value(),
+                ResponseCode.MSUS002.getMessage(),
                 null,
                 fieldErrors
         );
@@ -85,8 +86,8 @@ public class GlobalExceptionHandler {
         ));
 
         GenericResponseDTO<Map<String, String>> respuesta = new GenericResponseDTO<>(
-                ResponseCode.MSUS002,
-                "Argumento inválido",
+                HttpStatus.BAD_REQUEST.value(),
+                ResponseCode.MSUS002.getMessage(),
                 null,
                 fieldErrors
         );
@@ -106,8 +107,8 @@ public class GlobalExceptionHandler {
         ));
 
         GenericResponseDTO<Map<String, String>> respuesta = new GenericResponseDTO<>(
-                ResponseCode.MSUS002,
-                "Argumento inválido",
+                HttpStatus.BAD_REQUEST.value(),
+                ResponseCode.MSUS002.getMessage(),
                 null,
                 fieldErrors
         );
@@ -120,8 +121,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<GenericResponseDTO<Map<String, String>>>> handleException(Exception ex) {
         GenericResponseDTO<Map<String, String>> respuesta = new GenericResponseDTO<>(
-                ResponseCode.MSUS000,
-                ResponseCode.MSUS000.getHtmlMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ResponseCode.MSUS000.getMessage(),
                 null,
                 List.of()
         );

@@ -6,6 +6,7 @@ import co.com.pragma.api.mapper.UserApiRestMapper;
 import co.com.pragma.model.error.ResponseCode;
 import co.com.pragma.usecase.user.RegisterUserUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.util.Logger;
@@ -29,7 +30,7 @@ public class UserHandler {
                     return registerUserUseCase.saveUser(
                                     userApiRestMapper.createUserDTOToUser(createUserDTO)
                             )
-                            .thenReturn(new GenericResponseDTO<>(ResponseCode.MSUS001, null))
+                            .thenReturn(new GenericResponseDTO<>(HttpStatus.CREATED, ResponseCode.MSUS001, null))
                             .doOnSuccess(response ->
                                     log.debug("Finalizar guardar usuario {}", createUserDTO.getAddress())
                             );

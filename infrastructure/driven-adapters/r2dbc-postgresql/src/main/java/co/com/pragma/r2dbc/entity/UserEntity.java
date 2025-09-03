@@ -28,4 +28,5 @@ public class UserEntity {
     private Double baseSalary;
     @Column("id_rol")
     private Long rolId;
+    private String password;
 }

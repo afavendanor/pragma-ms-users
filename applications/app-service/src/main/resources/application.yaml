@@ -3,10 +3,19 @@ spring:
     name: pragma-ms-users
   profiles:
     include: r2dbc
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    mapper:
+      accept_case_insensitive_properties: true
+  error:
+    include-stack-trace: DEBUG
 
 logging:
   level:
-    co.com.pragma: DEBUG
+    org:
+      springframework:
+        security: DEBUG
 
 server:
   port: 8080

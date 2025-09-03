@@ -11,8 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -27,7 +27,8 @@ public class UserController {
 
     private final UserHandler userHandler;
 
-    @PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/user")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ADVISER')")
     @Operation(summary = "Agregar usuario", description = "Permite recibir una petición de agregar un usuario. Este evalua los campos obligatorios, existencia y formatos para antes de crear el elemento en el sistema")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario creado correctamente"),

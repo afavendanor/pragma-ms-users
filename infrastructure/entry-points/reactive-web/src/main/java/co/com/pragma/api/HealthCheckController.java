@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class HealthCheckController {
 
     @GetMapping(value = "/healthcheck")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ADVISER', 'USER')")
     @Operation(summary = "Health Check", description = "Verifica si el servicio está en funcionamiento.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "El servicio está funcionando correctamente.")

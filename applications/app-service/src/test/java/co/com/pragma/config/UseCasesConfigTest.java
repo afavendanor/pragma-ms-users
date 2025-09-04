@@ -1,5 +1,6 @@
 package co.com.pragma.config;
 
+import co.com.pragma.model.user.gateways.RoleRepository;
 import co.com.pragma.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -41,6 +42,11 @@ class UseCasesConfigTest {
         @Bean
         public UserRepository userGateway() {
             return Mockito.mock(UserRepository.class);
+        }
+
+        @Bean
+        public RoleRepository roleGateway() {
+            return Mockito.mock(RoleRepository.class);
         }
     }
 

@@ -19,4 +19,5 @@ public class User {
     private String email;
     private Double baseSalary;
     private String password;
+    private Role role;
 }

@@ -48,4 +48,8 @@ public class CreateUserDTO {
     @NotBlank(message = "La contraseña es requerida.")
     @Schema(description = "Contraseña del usuario.")
     private String password;
+
+    @NotNull(message = "El id del rol es requerido.")
+    @Schema(description = "Id del rol del usuario.")
+    private Long rolId;
 }

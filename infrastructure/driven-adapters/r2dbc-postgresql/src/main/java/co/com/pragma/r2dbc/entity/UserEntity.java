@@ -1,5 +1,8 @@
 package co.com.pragma.r2dbc.entity;
 
+import co.com.pragma.model.user.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -28,4 +31,22 @@ public class UserEntity {
     private Double baseSalary;
     @Column("id_rol")
     private Long rolId;
+    private String password;
+
+    @JsonProperty("role")
+    public void setRole(Role role) {
+        if (role != null) {
+            this.rolId = role.getId();
+        }
+    }
+
+    @JsonIgnore
+    public Role getRole() {
+        if (rolId != null) {
+            Role role = new Role();
+            role.setId(rolId);
+            return role;
+        }
+        return null;
+    }
 }

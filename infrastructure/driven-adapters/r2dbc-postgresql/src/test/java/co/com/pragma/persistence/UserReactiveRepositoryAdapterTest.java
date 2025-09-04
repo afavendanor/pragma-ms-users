@@ -14,14 +14,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +36,9 @@ class UserReactiveRepositoryAdapterTest {
     @Mock
     ObjectMapper mapper;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     private UserEntity userEntity;
     private User user;
 
@@ -48,6 +51,7 @@ class UserReactiveRepositoryAdapterTest {
        user = new User();
        user.setIdentification("id-123");
        user.setEmail("test@test.com");
+       user.setPassword("password123!");
     }
 
     @Test
@@ -91,6 +95,8 @@ class UserReactiveRepositoryAdapterTest {
         when(mapper.map(userEntity, User.class)).thenReturn(user);
         when(mapper.map(user, UserEntity.class)).thenReturn(userEntity);
         when(repository.save(userEntity)).thenReturn(Mono.just(userEntity));
+        when(passwordEncoder.encode(anyString()))
+                .thenReturn("$2a$10$vKzQOqwBKkggUTVxFZeG8OxRQ.PveLzPo0uNOXQLAuWcv9DjAwp.6");
 
         Mono<User> result = repositoryAdapter.save(user);
 
@@ -102,6 +108,8 @@ class UserReactiveRepositoryAdapterTest {
     @Test
     void shouldSaveUser_error() {
         when(mapper.map(user, UserEntity.class)).thenReturn(userEntity);
+        when(passwordEncoder.encode(anyString()))
+                .thenReturn("$2a$10$vKzQOqwBKkggUTVxFZeG8OxRQ.PveLzPo0uNOXQLAuWcv9DjAwp.6");
         when(repository.save(any())).
                 thenReturn(Mono.error(new RuntimeException("Error en base de datos")));
 
@@ -118,6 +126,8 @@ class UserReactiveRepositoryAdapterTest {
     @Test
     void shouldSaveUser_errorDuplicado() {
         when(mapper.map(user, UserEntity.class)).thenReturn(userEntity);
+        when(passwordEncoder.encode(anyString()))
+                .thenReturn("$2a$10$vKzQOqwBKkggUTVxFZeG8OxRQ.PveLzPo0uNOXQLAuWcv9DjAwp.6");
         when(repository.save(any())).
                 thenReturn(Mono.error(new DataIntegrityViolationException("Error, dato duplicado")));
 

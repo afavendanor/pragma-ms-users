@@ -4,6 +4,7 @@ import co.com.pragma.api.dto.GenericResponseDTO;
 import co.com.pragma.model.error.DuplicateEntryException;
 import co.com.pragma.model.error.FieldErrorException;
 import co.com.pragma.model.error.InternalErrorException;
+import co.com.pragma.model.error.UnhauthorizedException;
 import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 import reactor.util.Logger;
@@ -35,6 +36,12 @@ public class ErrorHandler<T> {
                         internalErrorException.getMessage(),
                         null,
                         internalErrorException.getFieldErrors()
+                ));
+                case UnhauthorizedException unhauthorizedException -> Mono.just(new GenericResponseDTO<>(
+                        HttpStatus.UNAUTHORIZED.value(),
+                        unhauthorizedException.getMessage(),
+                        null,
+                        unhauthorizedException.getFieldErrors()
                 ));
                 default -> Mono.error(exception);
             };

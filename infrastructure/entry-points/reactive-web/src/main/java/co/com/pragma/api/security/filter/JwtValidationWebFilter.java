@@ -27,6 +27,7 @@ public class JwtValidationWebFilter implements WebFilter {
 
     private static final List<String> PUBLIC_PATHS = List.of(
             "/auth/login",
+            "/api/v1/healthcheck",
             "/swagger-ui",
             "/v3/api-docs",
             "/swagger-resources",

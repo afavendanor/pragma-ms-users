@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/v1/healthcheck").permitAll()
                         .pathMatchers("/swagger-ui/**", "/v3/api-docs/**",
                                 "/swagger-resources/**", "/webjars/**").permitAll()
                         .anyExchange().authenticated()

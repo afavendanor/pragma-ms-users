@@ -28,7 +28,7 @@ public class UserController {
     private final UserHandler userHandler;
 
     @PostMapping(value = "/user")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ADVISER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADVISER')")
     @Operation(summary = "Agregar usuario", description = "Permite recibir una petición de agregar un usuario. Este evalua los campos obligatorios, existencia y formatos para antes de crear el elemento en el sistema")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario creado correctamente"),

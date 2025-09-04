@@ -7,7 +7,10 @@ import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.gateways.RoleRepository;
 import co.com.pragma.model.user.gateways.UserRepository;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class ObtainUserDataUseCase {
@@ -24,5 +27,9 @@ public class ObtainUserDataUseCase {
                             user.setRole(role);
                             return user;
                         }));
+    }
+
+    public Flux<User> getAllByEmails(List<String> emails) {
+        return userRepository.findAllByEmails(emails);
     }
 }

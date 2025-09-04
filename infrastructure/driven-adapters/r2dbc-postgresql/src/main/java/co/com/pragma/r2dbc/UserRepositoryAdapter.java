@@ -10,9 +10,12 @@ import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.Logger;
 import reactor.util.Loggers;
+
+import java.util.List;
 
 @Repository
 public class UserRepositoryAdapter extends ReactiveAdapterOperations<
@@ -47,6 +50,12 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<
         userFilter.setEmail(email);
         return super.findByExample(userFilter)
                 .next();
+    }
+
+    @Override
+    public Flux<User> findAllByEmails(List<String> emails) {
+        return repository.findByEmailIn(emails)
+                .map(this::toEntity);
     }
 
 

@@ -53,7 +53,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Error inesperado durante el proceso", content = @Content(schema = @Schema(implementation = GenericResponseDTO.class)))})
     public Mono<ResponseEntity<GenericResponseDTO<List<UserDTO>>>> listUserByEmails(@NotEmpty(message = "La lista no puede estar vacía")
                                                                                         @Size(min = 1, message = "Debe tener al menos 1 elemento")
-                                                                                        @RequestBody List<String> emails) {
+                                                                                        @RequestParam("emails") List<String> emails) {
         return userHandler.getAllByEmails(emails)
                 .map(genericResponseDto -> ResponseEntity.status(genericResponseDto.getResponseCode()).body(genericResponseDto));
 

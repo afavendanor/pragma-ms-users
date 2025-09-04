@@ -53,7 +53,7 @@ public class UserHandler {
                     return obtainUserDataUseCase.getAllByEmails(emails)
                             .map(userApiRestMapper::userTOUserDTO)
                             .collectList()
-                            .map(list -> new GenericResponseDTO<>(HttpStatus.CREATED, ResponseCode.MSUS001, list))
+                            .map(list -> new GenericResponseDTO<>(HttpStatus.OK, ResponseCode.MSUS001, list))
                             .doOnSuccess(response ->
                                     log.debug("lista de usuario por emails")
                             );

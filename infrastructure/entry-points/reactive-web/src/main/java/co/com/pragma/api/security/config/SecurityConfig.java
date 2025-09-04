@@ -59,9 +59,7 @@ public class SecurityConfig {
                                 "/swagger-resources/**", "/webjars/**").permitAll()
                         .anyExchange().authenticated()
                 )
-                // Add JWT validation filter for all requests except login
                 .addFilterAt(jwtValidationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-                // Add login filter
                 .addFilterAt(loginFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }

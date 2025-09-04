@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+
 @RequiredArgsConstructor
 @Component
 public class UserDetailRepositoryAdapter implements ReactiveUserDetailsService {
@@ -23,15 +25,24 @@ public class UserDetailRepositoryAdapter implements ReactiveUserDetailsService {
                 .flatMap(user ->
                         roleReactiveRepository.findById(user.getRolId())
                                 .switchIfEmpty(Mono.error(new InternalErrorException(ResponseCode.MSUS005)))
-                                .map(role -> new SimpleGrantedAuthority(
-                                        role.getName().startsWith("ROLE_") ? role.getName() : "ROLE_" + role.getName()
-                                ))
-                                .map(authority ->
+                                .map(role -> {
+                                    SimpleGrantedAuthority roleAuthority =
+                                            new SimpleGrantedAuthority(role.getName().startsWith("ROLE_")
+                                                    ? role.getName()
+                                                    : "ROLE_" + role.getName());
+
+                                    SimpleGrantedAuthority idAuthority =
+                                            new SimpleGrantedAuthority("ID_" + user.getIdentification());
+
+                                    return Arrays.asList(roleAuthority, idAuthority);
+                                })
+                                .map(authorities ->
                                         User.withUsername(user.getEmail())
                                                 .password(user.getPassword())
-                                                .authorities(authority)
+                                                .authorities(authorities)
                                                 .build()
                                 )
                 );
     }
+
 }

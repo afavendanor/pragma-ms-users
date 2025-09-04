@@ -38,7 +38,6 @@ public class JwtValidationWebFilter implements WebFilter {
 
         String path = exchange.getRequest().getPath().toString();
 
-        // Ignorar rutas públicas
         for (String publicPath : PUBLIC_PATHS) {
             if (path.startsWith(publicPath)) {
                 return chain.filter(exchange);
@@ -47,15 +46,14 @@ public class JwtValidationWebFilter implements WebFilter {
 
         String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (header == null || !header.startsWith(PREFIX_TOKEN)) {
-            return chain.filter(exchange); // no interrumpir flujo
+            return chain.filter(exchange);
         }
 
         String token = header.replace(PREFIX_TOKEN, "").trim();
 
         try {
-            // ✅ API nueva de jjwt 0.12.x
             Claims claims = Jwts.parser()
-                    .verifyWith(SECRET_KEY) // SECRET_KEY es SecretKey
+                    .verifyWith(SECRET_KEY)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();

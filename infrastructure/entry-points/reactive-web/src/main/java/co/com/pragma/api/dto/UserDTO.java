@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Schema(description = "Modelo de salida para datos de usuario.")
 public class UserDTO {
     @Schema(description = "Identificaciòn del usuario.")
-    private String id;
+    private String identification;
     @Schema(description = "Nombre del usuario.")
     private String name;
     @Schema(description = "Apellido del usuario.")

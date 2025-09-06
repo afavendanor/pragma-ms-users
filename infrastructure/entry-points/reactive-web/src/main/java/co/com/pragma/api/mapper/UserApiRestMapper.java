@@ -1,6 +1,7 @@
 package co.com.pragma.api.mapper;
 
 import co.com.pragma.api.dto.CreateUserDTO;
+import co.com.pragma.api.dto.UserDTO;
 import co.com.pragma.model.user.Role;
 import co.com.pragma.model.user.User;
 import org.mapstruct.*;
@@ -17,5 +18,7 @@ public interface UserApiRestMapper {
         role.setId(dto.getRolId());
         user.setRole(role);
     }
+
+    UserDTO userTOUserDTO(User user);
 
 }

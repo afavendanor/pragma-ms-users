@@ -1,6 +1,7 @@
 spring:
   application:
     name: pragma-ms-users
+    api-key: mi-api-key-secreta
   profiles:
     include: r2dbc
   main:

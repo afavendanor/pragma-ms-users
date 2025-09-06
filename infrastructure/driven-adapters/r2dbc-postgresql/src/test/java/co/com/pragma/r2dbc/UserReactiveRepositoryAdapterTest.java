@@ -1,10 +1,8 @@
-package co.com.pragma.persistence;
+package co.com.pragma.r2dbc;
 
 import co.com.pragma.model.error.DuplicateEntryException;
 import co.com.pragma.model.user.User;
 import co.com.pragma.model.error.ResponseCode;
-import co.com.pragma.r2dbc.UserReactiveRepository;
-import co.com.pragma.r2dbc.UserRepositoryAdapter;
 import co.com.pragma.r2dbc.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -139,6 +140,37 @@ class UserReactiveRepositoryAdapterTest {
                     assertEquals(ResponseCode.MSUS004.getMessage(), error.getMessage());
                 })
                 .verify();
+    }
+
+    @Test
+    void shouldFindUserByEmail() {
+        when(repository.findAll(any(Example.class)))
+                .thenReturn(Flux.just(userEntity));
+        when(mapper.map(any(User.class), eq(UserEntity.class)))
+                .thenReturn(userEntity);
+        when(mapper.map(any(UserEntity.class), eq(User.class)))
+                .thenReturn(user);
+
+        Mono<User> result = repositoryAdapter.findByEmail("test@example.com");
+
+        StepVerifier.create(result)
+                .expectNext(user)
+                .verifyComplete();
+    }
+
+
+    @Test
+    void shouldFindAllUser_byEmail() {
+        when(repository.findByEmailIn(anyList()))
+                .thenReturn(Flux.just(userEntity));
+        when(mapper.map(any(UserEntity.class), eq(User.class)))
+                .thenReturn(user);
+
+        Flux<User> result = repositoryAdapter.findAllByEmails(List.of("test@example.com"));
+
+        StepVerifier.create(result)
+                .expectNext(user)
+                .verifyComplete();
     }
 
 }

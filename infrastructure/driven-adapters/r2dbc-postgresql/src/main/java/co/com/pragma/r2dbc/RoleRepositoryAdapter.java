@@ -15,8 +15,7 @@ public class RoleRepositoryAdapter extends ReactiveAdapterOperations<
         RoleReactiveRepository
 > implements RoleRepository {
 
-    public RoleRepositoryAdapter(RoleReactiveRepository repository, ObjectMapper mapper) {
+    protected RoleRepositoryAdapter(RoleReactiveRepository repository, ObjectMapper mapper) {
         super(repository, mapper, entity -> mapper.map(entity, Role.class));
     }
-
 }

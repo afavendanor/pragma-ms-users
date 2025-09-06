@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,8 +24,10 @@ import static co.com.pragma.api.security.config.TokenJwtConfig.*;
 
 public class JwtValidationWebFilter implements WebFilter {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    @Value("${spring.application.api-key}")
+    private String apiKeyApp;
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final List<String> PUBLIC_PATHS = List.of(
             "/auth/login",
             "/api/v1/healthcheck",
@@ -43,6 +46,20 @@ public class JwtValidationWebFilter implements WebFilter {
             if (path.startsWith(publicPath)) {
                 return chain.filter(exchange);
             }
+        }
+
+        String xApikey = exchange.getRequest().getHeaders().getFirst("x-api-key");
+        if (apiKeyApp.equalsIgnoreCase(xApikey)) {
+            var authentication = new UsernamePasswordAuthenticationToken(
+                    "apiKeyUser",
+                    null,
+                    List.of(new SimpleGrantedAuthority("ROLE_API_KEY"))
+            );
+
+            return chain.filter(exchange)
+                    .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(
+                            Mono.just(new SecurityContextImpl(authentication))
+                    ));
         }
 
         String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
@@ -65,7 +82,13 @@ public class JwtValidationWebFilter implements WebFilter {
             }
 
             List<String> roles = claims.get("authorities", List.class);
-            if (roles == null) roles = Collections.emptyList();
+            if (roles == null) {
+                roles = Collections.emptyList();
+            } else {
+                roles = roles.stream()
+                        .filter(role -> role.startsWith("ROLE"))
+                        .toList();
+            }
 
             var authorities = roles.stream()
                     .map(SimpleGrantedAuthority::new)

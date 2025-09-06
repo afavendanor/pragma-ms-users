@@ -4,11 +4,12 @@ import co.com.pragma.api.dto.GenericResponseDTO;
 import co.com.pragma.api.dto.RequestLoginDTO;
 import co.com.pragma.model.error.ResponseCode;
 import co.com.pragma.model.error.UnhauthorizedException;
-import co.com.pragma.usecase.user.ObtainUserDataUseCase;
+import co.com.pragma.model.error.UserNotFoundException;
+import co.com.pragma.usecase.user.ObtainUserDataByEmailUseCase;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.util.Logger;
@@ -28,15 +29,15 @@ public class AuthHandler {
 
     private static final Logger log = Loggers.getLogger(AuthHandler.class.getName());
 
-    private final ObtainUserDataUseCase obtainUserDataUseCase;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final ObtainUserDataByEmailUseCase obtainUserDataByEmailUseCase;
+    private final PasswordEncoder passwordEncoder;
 
     public Mono<GenericResponseDTO<Map<String, Object>>> login(RequestLoginDTO requestLoginDTO) {
         ErrorHandler<Map<String, Object>> errorHandler = new ErrorHandler<>();
 
         return errorHandler.addErrors(
-                obtainUserDataUseCase.getUserByEmail(requestLoginDTO.getEmail())
-                        .switchIfEmpty(Mono.error(new UnhauthorizedException(ResponseCode.MSUS006)))
+                obtainUserDataByEmailUseCase.getUserByEmail(requestLoginDTO.getEmail())
+                        .switchIfEmpty(Mono.error(new UserNotFoundException(ResponseCode.MSUS006)))
                         .flatMap(user -> {
                             log.debug("Procesando login para usuario {}", requestLoginDTO.getEmail());
 
@@ -45,7 +46,7 @@ public class AuthHandler {
                             }
 
                             if (!requestLoginDTO.getEmail().equals(user.getEmail())) {
-                                return Mono.error(new UnhauthorizedException(ResponseCode.MSUS006));
+                                return Mono.error(new UserNotFoundException(ResponseCode.MSUS006));
                             }
 
                             String roleName = user.getRole().getName();
@@ -57,7 +58,7 @@ public class AuthHandler {
                                     .claim("authorities", Arrays.asList(roleName, "ID_" + user.getIdentification()))
                                     .subject(user.getEmail())
                                     .issuedAt(Date.from(Instant.now()))
-                                    .expiration(Date.from(Instant.now().plusSeconds(3600)))
+                                    .expiration(Date.from(Instant.now().plusSeconds(10800)))
                                     .signWith(SECRET_KEY)
                                     .compact();
 

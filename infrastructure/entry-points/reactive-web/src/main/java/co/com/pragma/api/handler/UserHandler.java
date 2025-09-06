@@ -5,7 +5,7 @@ import co.com.pragma.api.dto.GenericResponseDTO;
 import co.com.pragma.api.dto.UserDTO;
 import co.com.pragma.api.mapper.UserApiRestMapper;
 import co.com.pragma.model.error.ResponseCode;
-import co.com.pragma.usecase.user.ObtainUserDataUseCase;
+import co.com.pragma.usecase.user.ObtainUserDataByEmailListUseCase;
 import co.com.pragma.usecase.user.RegisterUserUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class UserHandler {
     private static final Logger log = Loggers.getLogger(UserHandler.class.getName());
 
     private final RegisterUserUseCase registerUserUseCase;
-    private final ObtainUserDataUseCase obtainUserDataUseCase;
+    private final ObtainUserDataByEmailListUseCase obtainUserDataByEmailListUseCase;
     private final UserApiRestMapper userApiRestMapper;
 
     public Mono<GenericResponseDTO<Object>> createUser(CreateUserDTO createUserDTO) {
@@ -50,7 +50,7 @@ public class UserHandler {
         return errorHandler.addErrors(
                 Mono.defer(() -> {
                     log.debug("Inicializar lista de usuario por emails");
-                    return obtainUserDataUseCase.getAllByEmails(emails)
+                    return obtainUserDataByEmailListUseCase.getAllByEmails(emails)
                             .map(userApiRestMapper::userTOUserDTO)
                             .collectList()
                             .map(list -> new GenericResponseDTO<>(HttpStatus.OK, ResponseCode.MSUS001, list))

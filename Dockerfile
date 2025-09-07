@@ -3,7 +3,7 @@ FROM gradle:8.5-jdk17 AS builder
 WORKDIR /app
 COPY . /app
 
-RUN gradle clean build -x validateStructure -x test --no-daemon
+RUN gradle clean build -x validateStructure -x test
 
 # Etapa runtime
 FROM eclipse-temurin:21-jdk-alpine

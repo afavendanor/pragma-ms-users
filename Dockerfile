@@ -1,7 +1,8 @@
 # Etapa de build
 FROM gradle:8.5-jdk17 AS builder
 WORKDIR /app
-COPY .. /app
+COPY . /app
+
 RUN gradle clean build -x test
 
 # Etapa runtime

@@ -20,21 +20,15 @@ plugins {
 
 apply from: './main.gradle'
 
-test {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
+// Configurar el proyecto raíz para copiar el JAR del app-service
+task copyJar(type: Copy) {
+    dependsOn ':app-service:bootJar'
+    from 'applications/app-service/build/libs/'
+    into 'build/libs/'
+    include '*.jar'
 }
 
-jacocoTestReport {
-    dependsOn test
-    finalizedBy jacocoMergedReport
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-        csv.required.set(false)
-        html.destination file("${buildDir}/jacocoHtml")
-    }
-}
+build.dependsOn copyJar
 
 sonar {
     def modules = subprojects.projectDir.collect { "${it.toString().replace(project.projectDir.toString() + "/", "")}" }

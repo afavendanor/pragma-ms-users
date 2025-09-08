@@ -28,25 +28,9 @@ public class JwtValidationWebFilter implements WebFilter {
     private String apiKeyApp;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final List<String> PUBLIC_PATHS = List.of(
-            "/auth/login",
-            "/api/v1/healthcheck",
-            "/swagger-ui",
-            "/v3/api-docs",
-            "/swagger-resources",
-            "/webjars"
-    );
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-
-        String path = exchange.getRequest().getPath().toString();
-
-        for (String publicPath : PUBLIC_PATHS) {
-            if (path.startsWith(publicPath)) {
-                return chain.filter(exchange);
-            }
-        }
 
         String xApikey = exchange.getRequest().getHeaders().getFirst("x-api-key");
         if (apiKeyApp.equalsIgnoreCase(xApikey)) {

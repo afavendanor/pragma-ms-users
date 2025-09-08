@@ -36,11 +36,16 @@ public class SecurityConfig {
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/api/v1/healthcheck").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/users/emails").access(this::apiKeyOrJwtAuthorization)
                         .pathMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/api/v1/healthcheck").permitAll()
-                        .pathMatchers("/swagger-ui/**", "/v3/api-docs/**",
-                                "/swagger-resources/**", "/webjars/**").permitAll()
+                        .pathMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         .anyExchange().authenticated()
                 )
                 .addFilterAt(jwtValidationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)

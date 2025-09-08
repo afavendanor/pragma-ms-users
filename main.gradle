@@ -14,15 +14,17 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'info.solidsoft.pitest'
 
+    if (project.name == 'app-service') {
+        apply plugin: 'org.springframework.boot'
+    }
+
     compileJava.dependsOn validateStructure
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-
-    build.dependsOn 'pitest'
-
+    
     test {
         useJUnitPlatform()
     }

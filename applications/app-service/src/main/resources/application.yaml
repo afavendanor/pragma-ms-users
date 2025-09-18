@@ -2,6 +2,8 @@ spring:
   application:
     name: pragma-ms-users
     api-key: mi-api-key-secreta
+  webflux:
+    base-path: /users
   profiles:
     include: r2dbc
   main:
@@ -20,6 +22,7 @@ logging:
 
 server:
   port: 8081
+
 
 springdoc:
   api-docs:

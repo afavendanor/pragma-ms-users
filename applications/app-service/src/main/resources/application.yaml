@@ -1,7 +1,7 @@
 spring:
   application:
     name: pragma-ms-users
-    api-key: mi-api-key-secreta
+    api-key: ${API_KEY}
   webflux:
     base-path: /users
   profiles:
@@ -16,9 +16,7 @@ spring:
 
 logging:
   level:
-    org:
-      springframework:
-        security: DEBUG
+    co.com.pragma: WARN
 
 server:
   port: 8081
